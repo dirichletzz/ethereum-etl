@@ -73,8 +73,7 @@ class EthStreamerAdapter:
 
         enriched_blocks = blocks \
             if EntityType.BLOCK in self.entity_types else []
-        enriched_transactions = enrich_transactions(transactions, receipts) \
-            if EntityType.TRANSACTION in self.entity_types else []
+        enriched_transactions = transactions
         enriched_logs = enrich_logs(blocks, logs) \
             if EntityType.LOG in self.entity_types else []
         enriched_token_transfers = enrich_token_transfers(blocks, token_transfers) \
@@ -192,7 +191,7 @@ class EthStreamerAdapter:
             return EntityType.TRANSACTION in self.entity_types or self._should_export(EntityType.LOG)
 
         if entity_type == EntityType.RECEIPT:
-            return EntityType.TRANSACTION in self.entity_types or self._should_export(EntityType.TOKEN_TRANSFER)
+            return self._should_export(EntityType.TOKEN_TRANSFER)
 
         if entity_type == EntityType.LOG:
             return EntityType.LOG in self.entity_types or self._should_export(EntityType.TOKEN_TRANSFER)
